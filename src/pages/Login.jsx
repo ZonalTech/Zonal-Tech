@@ -34,7 +34,7 @@ export default function Login() {
         <form onSubmit={submit}>
           <label className="field">
             <span>Email</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus placeholder="you@company.co.ke" />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus placeholder="you@zonaltech.co.ke" />
           </label>
           <label className="field">
             <span>Password</span>
@@ -45,6 +45,9 @@ export default function Login() {
           </button>
         </form>
         <div className="auth-foot">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
+        <div className="auth-foot" style={{ marginTop: ".4rem" }}>
           No account? <Link to="/register">Create one</Link>
         </div>
       </div>

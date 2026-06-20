@@ -39,7 +39,18 @@
 }
 
 * { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  /* Account for the sticky navbar when jumping to in-page anchors (#pricing). */
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+  /* Hide the global scrollbar entirely so it never reserves width or shifts the
+     navbar/content. The page still scrolls via wheel, touch and keyboard. */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* legacy Edge/IE */
+}
+html::-webkit-scrollbar { width: 0; height: 0; display: none; }  /* WebKit/Blink */
 html, body, #root { height: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -64,6 +75,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 p  { margin: 0 0 1rem; color: var(--muted); }
 small { color: var(--muted); }
 code, .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; }
+.icon { display: inline-block; vertical-align: -.18em; flex-shrink: 0; }
 
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem; }
 .section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; }

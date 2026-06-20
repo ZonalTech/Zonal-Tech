@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, fmtKES } from "../api";
+import Icon, { serviceIcon } from "../components/Icon.jsx";
 
 export default function ServiceDetail() {
   const { key } = useParams();
@@ -21,13 +22,13 @@ export default function ServiceDetail() {
       <div className="container">
         <Link to="/services" className="muted" style={{ fontSize: ".9rem" }}>← All services</Link>
         <div className="row wrap" style={{ alignItems: "flex-start", gap: "1.2rem", margin: "1rem 0 2.5rem" }}>
-          <div className="ico" style={{ width: 64, height: 64, fontSize: "2rem" }}>{service.icon || "📦"}</div>
+          <div className="ico" style={{ width: 64, height: 64 }}><Icon name={serviceIcon(service.key)} size={30} /></div>
           <div style={{ flex: 1, minWidth: 260 }}>
             <h1 style={{ fontSize: "2.2rem", marginBottom: ".4rem" }}>{service.name}</h1>
             <p style={{ fontSize: "1.1rem", maxWidth: "44rem" }}>{service.description || service.tagline}</p>
-            {service.download_url && (
-              <a href={service.download_url} target="_blank" rel="noreferrer" className="btn btn-sm">
-                ⬇ Download installer
+            {service.requires_device && (
+              <a href={`/api/download/${service.key}`} className="btn btn-sm">
+                <Icon name="download" /> Download installer
               </a>
             )}
           </div>

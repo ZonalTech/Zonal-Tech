@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, fmtKES } from "../api";
+import Icon, { serviceIcon } from "../components/Icon.jsx";
 
 const FEATURES = [
-  { ico: "🔐", t: "Cryptographic licensing", d: "Every licence is a signed Ed25519 token bound to one machine — impossible to forge or share. Issued the instant payment clears." },
-  { ico: "📱", t: "Pay with M-Pesa", d: "Customers buy with an STK push straight to their phone. No cards, no friction — the way Kenya pays." },
-  { ico: "⚡", t: "Instant activation", d: "Pay, copy the licence into the app, done. No waiting on a human, no emailing keys back and forth." },
-  { ico: "🖥️", t: "Per-device control", d: "Register each machine, track expiry, renew or revoke from one dashboard — across every service you run." },
-  { ico: "♻️", t: "Renewals that stack", d: "Renew early and the new term is added on top of what's left. Customers are never penalised for paying ahead." },
-  { ico: "🌍", t: "Works offline", d: "Licences verify with no internet. Perfect for tills and field devices on flaky connections." },
+  { ico: "lock", t: "Cryptographic licensing", d: "Every licence is a signed Ed25519 token bound to one machine — impossible to forge or share. Issued the instant payment clears." },
+  { ico: "phone", t: "Pay with M-Pesa", d: "Customers buy with an STK push straight to their phone. No cards, no friction — the way Kenya pays." },
+  { ico: "zap", t: "Instant activation", d: "Pay, copy the licence into the app, done. No waiting on a human, no emailing keys back and forth." },
+  { ico: "monitor", t: "Per-device control", d: "Register each machine, track expiry, renew or revoke from one dashboard — across every service you run." },
+  { ico: "repeat", t: "Renewals that stack", d: "Renew early and the new term is added on top of what's left. Customers are never penalised for paying ahead." },
+  { ico: "globe", t: "Works offline", d: "Licences verify with no internet. Perfect for tills and field devices on flaky connections." },
 ];
 
 export default function Home() {
@@ -63,7 +64,7 @@ kVuEZUkK80yPr7ecot7Pk0o2KGxGgV-hSIfrJNRy
 H_Q2lMlxdCgysXYXiU6A2-GFM9Xy3Rpq5KEDljPp
 -----END ZT-POS LICENSE-----`}</div>
             <div className="kv" style={{ marginTop: "1rem" }}>
-              <div><span className="k">Customer</span><br/>Acme Retail Ltd</div>
+              <div><span className="k">Customer</span><br/>Zonal Tech Ltd</div>
               <div><span className="k">Edition</span><br/>Pro</div>
               <div><span className="k">Expires</span><br/>20 Jun 2027</div>
             </div>
@@ -82,7 +83,7 @@ H_Q2lMlxdCgysXYXiU6A2-GFM9Xy3Rpq5KEDljPp
           <div className="grid-3">
             {FEATURES.map((f) => (
               <article key={f.t} className="card feature">
-                <div className="ico">{f.ico}</div>
+                <div className="ico"><Icon name={f.ico} size={22} /></div>
                 <h3>{f.t}</h3>
                 <p>{f.d}</p>
               </article>
@@ -103,7 +104,7 @@ H_Q2lMlxdCgysXYXiU6A2-GFM9Xy3Rpq5KEDljPp
               const from = s.plans?.length ? Math.min(...s.plans.map((p) => p.price_kes)) : null;
               return (
                 <Link to={`/services/${s.key}`} key={s.id} className="card service-card">
-                  <div className="ico">{s.icon || "📦"}</div>
+                  <div className="ico"><Icon name={serviceIcon(s.key)} size={22} /></div>
                   <h3>{s.name}</h3>
                   <p>{s.tagline}</p>
                   {from != null && <div className="price">{fmtKES(from)} <span>/ from</span></div>}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, fmtKES } from "../api";
+import Icon, { serviceIcon } from "../components/Icon.jsx";
 
 export default function Services() {
   const [services, setServices] = useState(null);
@@ -28,7 +29,7 @@ export default function Services() {
               const from = s.plans?.length ? Math.min(...s.plans.map((p) => p.price_kes)) : null;
               return (
                 <Link to={`/services/${s.key}`} key={s.id} className="card service-card">
-                  <div className="ico">{s.icon || "📦"}</div>
+                  <div className="ico"><Icon name={serviceIcon(s.key)} size={22} /></div>
                   <h3>{s.name}</h3>
                   <p>{s.tagline}</p>
                   {from != null && <div className="price">{fmtKES(from)} <span>/ from</span></div>}

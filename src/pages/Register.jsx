@@ -32,16 +32,16 @@ export default function Register() {
         <form onSubmit={submit}>
           <label className="field">
             <span>Full name *</span>
-            <input value={form.name} onChange={set("name")} required autoFocus placeholder="Jane Mwangi" />
+            <input value={form.name} onChange={set("name")} required autoFocus placeholder="Your full name" />
           </label>
           <label className="field">
             <span>Email *</span>
-            <input type="email" value={form.email} onChange={set("email")} required placeholder="jane@acme.co.ke" />
+            <input type="email" value={form.email} onChange={set("email")} required placeholder="you@zonaltech.co.ke" />
           </label>
           <div className="grid-2" style={{ gap: ".75rem" }}>
             <label className="field">
               <span>Company</span>
-              <input value={form.company} onChange={set("company")} placeholder="Acme Retail Ltd" />
+              <input value={form.company} onChange={set("company")} placeholder="Zonal Tech Ltd" />
             </label>
             <label className="field">
               <span>M-Pesa phone</span>

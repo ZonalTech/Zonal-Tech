@@ -8,6 +8,8 @@ import {
   selfVerify,
 } from "../lib/license";
 import CopyButton from "../components/CopyButton.jsx";
+import { useDialog } from "../components/Dialog.jsx";
+import Icon from "../components/Icon.jsx";
 import "./Generator.css";
 
 const SEED_STORAGE_KEY = "zt.license.seed";
@@ -27,6 +29,7 @@ function plusYearsISO(years) {
  * matches the server's, so manual licences validate in products too.
  */
 export default function Generator() {
+  const { confirm, alert } = useDialog();
   const [seed, setSeed] = useState(() => localStorage.getItem(SEED_STORAGE_KEY) || DEMO_SEED_B64);
   const [seedDraft, setSeedDraft] = useState("");
   const [showSeed, setShowSeed] = useState(false);
@@ -65,17 +68,20 @@ export default function Generator() {
     } catch (e) { setGenError(e.message); setGenerated(null); }
   }
 
-  function regenerateKey() {
-    if (!window.confirm(
-      "Generate a NEW signing key?\n\nEvery licence issued with the current key will stop validating. " +
-      "You must copy the new public key into each app's LICENSE_PUBLIC_KEY.")) return;
+  async function regenerateKey() {
+    const ok = await confirm({
+      title: "Generate a new signing key?", danger: true, confirmText: "Generate new key",
+      message: "Every licence issued with the current key will stop validating. You must copy the "
+             + "new public key into each app's LICENSE_PUBLIC_KEY.",
+    });
+    if (!ok) return;
     setSeed(generateSeedB64());
     reset();
   }
 
   function importSeed() {
     try { publicKeyB64(seedDraft.trim()); setSeed(seedDraft.trim()); setSeedDraft(""); reset(); }
-    catch (e) { alert("Invalid seed: " + e.message); }
+    catch (e) { alert({ title: "Invalid seed", message: e.message }); }
   }
 
   function downloadLicense() {
@@ -111,7 +117,7 @@ export default function Generator() {
 
             <label className="field">
               <span>Customer name *</span>
-              <input value={customer} onChange={bind(setCustomer)} placeholder="Acme Ltd" autoFocus />
+              <input value={customer} onChange={bind(setCustomer)} placeholder="Zonal Tech Ltd" autoFocus />
             </label>
             <label className="field">
               <span>Device / Machine ID *</span>
@@ -232,7 +238,7 @@ export default function Generator() {
               <pre className="token">{generated.token}</pre>
               <div className="row wrap">
                 <CopyButton text={generated.token} label="Copy licence" className="btn btn-primary btn-sm" />
-                <button className="btn btn-sm" onClick={downloadLicense}>⬇ Download .lic</button>
+                <button className="btn btn-sm" onClick={downloadLicense}><Icon name="download" /> Download .lic</button>
               </div>
               <details className="payload mt">
                 <summary>Payload (decoded JSON)</summary>

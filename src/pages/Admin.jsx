@@ -2,31 +2,53 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, fmtKES, fmtDate } from "../api";
 import CopyButton from "../components/CopyButton.jsx";
+import { useDialog } from "../components/Dialog.jsx";
+import Icon from "../components/Icon.jsx";
 
 function Stat({ n, l }) {
   return <div className="card stat"><div className="n gradient-text">{n}</div><div className="l">{l}</div></div>;
 }
 
 export default function Admin() {
+  const { confirm } = useDialog();
   const [tab, setTab] = useState("overview");
   const [stats, setStats] = useState(null);
   const [customers, setCustomers] = useState([]);
   const [orders, setOrders] = useState([]);
   const [licenses, setLicenses] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState(null);
 
   const loadStats = () => api("/admin/stats").then(setStats);
   const loadLicenses = () => api("/admin/licenses").then(({ licenses }) => setLicenses(licenses));
+  const loadMessages = () => api("/admin/messages").then(({ messages }) => setMessages(messages));
+  const loadOrders = () => api("/admin/orders").then(({ orders }) => setOrders(orders));
 
   useEffect(() => {
     loadStats();
     api("/admin/customers").then(({ customers }) => setCustomers(customers));
-    api("/admin/orders").then(({ orders }) => setOrders(orders));
+    loadOrders();
     loadLicenses();
+    loadMessages();
   }, []);
 
+  async function confirmOrder(id) {
+    const ok = await confirm({ title: "Confirm payment", confirmText: "Confirm & issue",
+      message: "Mark this order as paid and issue the licence? Do this only after funds have arrived." });
+    if (!ok) return;
+    await api(`/admin/orders/${id}/confirm`, { method: "POST" });
+    loadOrders(); loadLicenses(); loadStats();
+  }
+
+  async function markHandled(id) {
+    await api(`/admin/messages/${id}/handled`, { method: "POST" });
+    loadMessages(); loadStats();
+  }
+
   async function revoke(id) {
-    if (!confirm("Revoke this licence? It will stop validating in the product.")) return;
+    const ok = await confirm({ title: "Revoke licence", danger: true, confirmText: "Revoke",
+      message: "Revoke this licence? It will stop validating in the product." });
+    if (!ok) return;
     await api(`/admin/licenses/${id}/revoke`, { method: "POST" });
     loadLicenses(); loadStats();
   }
@@ -35,7 +57,11 @@ export default function Admin() {
     setMsg("Licence renewed for 365 days."); loadLicenses(); loadStats();
   }
 
-  const TABS = [["overview", "Overview"], ["licenses", "Licences"], ["orders", "Orders"], ["customers", "Customers"], ["issue", "Issue licence"]];
+  const newMsgs = messages.filter((m) => m.status === "new").length;
+  const pendingCount = stats?.pending_orders || 0;
+  const TABS = [["overview", "Overview"], ["licenses", "Licences"],
+    ["orders", `Orders${pendingCount ? ` (${pendingCount})` : ""}`],
+    ["customers", "Customers"], ["messages", `Messages${newMsgs ? ` (${newMsgs})` : ""}`], ["issue", "Issue licence"]];
 
   return (
     <section className="section" style={{ paddingTop: "2.5rem" }}>
@@ -49,7 +75,11 @@ export default function Admin() {
             {stats && <span className={`badge ${stats.payment_mode === "mpesa" ? "badge-ok" : "badge-warn"}`}>
               Payments: {stats.payment_mode === "mpesa" ? "M-Pesa live" : "simulated"}
             </span>}
-            <Link to="/admin/generator" className="btn btn-sm">🔑 License Generator</Link>
+            <Link to="/admin/users" className="btn btn-sm"><Icon name="users" /> Users</Link>
+            <Link to="/admin/services" className="btn btn-sm"><Icon name="tag" /> Services & Pricing</Link>
+            <Link to="/admin/payments" className="btn btn-sm"><Icon name="card" /> Payments</Link>
+            <Link to="/admin/settings" className="btn btn-sm"><Icon name="cpu" /> AI Settings</Link>
+            <Link to="/admin/generator" className="btn btn-sm"><Icon name="key" /> License Generator</Link>
           </div>
         </div>
 
@@ -69,6 +99,28 @@ export default function Admin() {
               <Stat n={stats.customers} l="Customers" />
               <Stat n={stats.paid_orders} l="Paid orders" />
             </div>
+
+            {stats.pending_orders_list?.length > 0 && (
+              <div className="card" style={{ borderColor: "rgba(251,191,36,.4)", marginBottom: "2rem" }}>
+                <h3 style={{ marginTop: 0 }}><Icon name="bell" size={20} /> Orders awaiting confirmation ({stats.pending_orders})</h3>
+                <p className="hint" style={{ marginTop: 0 }}>Confirm an order once the customer's payment has arrived — this issues their licence.</p>
+                <div className="table-wrap">
+                  <table>
+                    <thead><tr><th>#</th><th>Customer</th><th>Service</th><th>Plan</th><th>Amount</th><th>Method</th><th>Placed</th><th></th></tr></thead>
+                    <tbody>
+                      {stats.pending_orders_list.map((o) => (
+                        <tr key={o.id}>
+                          <td>{o.id}</td><td>{o.customer}</td><td>{o.service}</td><td>{o.plan}</td>
+                          <td>{fmtKES(o.amount_kes)}</td><td>{o.payment?.method || "—"}</td>
+                          <td>{fmtDate(o.created_at)}</td>
+                          <td><button className="btn btn-primary btn-sm" onClick={() => confirmOrder(o.id)}>Confirm payment</button></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
             <div className="card">
               <h3 style={{ marginTop: 0 }}>Signing public key</h3>
               <p className="hint" style={{ marginTop: 0 }}>Paste into a product's <code>LICENSE_PUBLIC_KEY</code> so it can verify portal-issued licences.</p>
@@ -120,15 +172,17 @@ export default function Admin() {
         {tab === "orders" && (
           <div className="table-wrap">
             <table>
-              <thead><tr><th>#</th><th>Customer</th><th>Service</th><th>Plan</th><th>Amount</th><th>Status</th><th>M-Pesa</th><th>Date</th></tr></thead>
+              <thead><tr><th>#</th><th>Customer</th><th>Service</th><th>Plan</th><th>Amount</th><th>Method</th><th>Status</th><th>Ref</th><th>Date</th><th></th></tr></thead>
               <tbody>
                 {orders.map((o) => (
                   <tr key={o.id}>
                     <td>{o.id}</td><td>{o.customer}</td><td>{o.service}</td><td>{o.plan}</td>
                     <td>{fmtKES(o.amount_kes)}</td>
+                    <td>{o.payment?.method || "—"}</td>
                     <td><span className={`badge ${o.status === "paid" ? "badge-ok" : o.status === "failed" ? "badge-danger" : "badge-warn"}`}>{o.status}</span></td>
-                    <td className="mono">{o.payment?.mpesa_receipt || "—"}</td>
+                    <td className="mono" style={{ fontSize: ".8rem" }}>{o.payment?.mpesa_receipt || o.payment?.provider_ref || "—"}</td>
                     <td>{fmtDate(o.created_at)}</td>
+                    <td>{o.status === "pending" && <button className="btn btn-sm" onClick={() => confirmOrder(o.id)}>Confirm</button>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -151,6 +205,28 @@ export default function Admin() {
               </tbody>
             </table>
           </div>
+        )}
+
+        {tab === "messages" && (
+          messages.length === 0 ? <div className="empty">No messages yet.</div> : (
+            <div className="stack">
+              {messages.map((m) => (
+                <div key={m.id} className="card">
+                  <div className="row between wrap">
+                    <div>
+                      <strong>{m.name}</strong> · <a href={`mailto:${m.email}`} style={{ color: "var(--accent)" }}>{m.email}</a>
+                      <span className="badge" style={{ marginLeft: ".5rem" }}>{m.category}</span>
+                      {m.status === "new" && <span className="badge badge-warn" style={{ marginLeft: ".4rem" }}>new</span>}
+                    </div>
+                    <small>{fmtDate(m.created_at)}</small>
+                  </div>
+                  {m.subject && <div style={{ marginTop: ".5rem", fontWeight: 600 }}>{m.subject}</div>}
+                  <p style={{ margin: ".4rem 0 .8rem" }}>{m.message}</p>
+                  {m.status === "new" && <button className="btn btn-sm" onClick={() => markHandled(m.id)}>Mark handled</button>}
+                </div>
+              ))}
+            </div>
+          )
         )}
 
         {tab === "issue" && <IssueLicense onIssued={() => { loadLicenses(); loadStats(); setMsg("Licence issued."); setTab("licenses"); }} />}
@@ -181,7 +257,7 @@ function IssueLicense({ onIssued }) {
         <p className="hint" style={{ marginTop: 0 }}>For comps, support replacements or offline sales. The customer must already have an account.</p>
         {error && <div className="alert alert-error">{error}</div>}
         <label className="field"><span>Customer email</span>
-          <input type="email" value={form.email} onChange={set("email")} required placeholder="jane@acme.co.ke" /></label>
+          <input type="email" value={form.email} onChange={set("email")} required placeholder="customer@zonaltech.co.ke" /></label>
         <div className="grid-2" style={{ gap: ".75rem" }}>
           <label className="field"><span>Service key</span>
             <input value={form.service_key} onChange={set("service_key")} required /></label>
