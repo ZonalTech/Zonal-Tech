@@ -19,7 +19,7 @@ export default function Admin() {
   const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState(null);
 
-  const loadStats = () => api("/admin/stats").then(setStats);
+  const loadStats = () => api("/admin/stats").then(({ stats }) => setStats(stats));
   const loadLicenses = () => api("/admin/licenses").then(({ licenses }) => setLicenses(licenses));
   const loadMessages = () => api("/admin/messages").then(({ messages }) => setMessages(messages));
   const loadOrders = () => api("/admin/orders").then(({ orders }) => setOrders(orders));

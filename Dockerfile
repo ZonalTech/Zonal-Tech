@@ -36,9 +36,9 @@ COPY --from=build /app/server ./server
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 
-# Zonal injects PORT; default to 8000 to match the server's own default.
-ENV PORT=8000
-EXPOSE 8000
+# The server listens on $PORT (server/src/index.js). On Zonal Cloud the platform
+# injects PORT and routes Traefik to it — no need to set it here. Falls back to
+# the server's own default (8000) for a bare local `docker run`.
 
 # Start the Express server (serves API + static dist/).
 CMD ["node", "server/src/index.js"]
