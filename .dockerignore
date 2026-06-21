@@ -1,0 +1,14 @@
+# Don't ship local build artifacts into the Docker build context — the image
+# installs deps and builds the frontend itself.
+node_modules
+server/node_modules
+dist
+dist-ssr
+.git
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+.vscode
+.idea
