@@ -80,7 +80,30 @@ router.post("/reset", async (req, res) => {
 
   const hash = await bcrypt.hash(password, 10);
   const updated = await one(
-    "UPDATE users SET password_hash=$1, reset_token=NULL, reset_expires=NULL WHERE id=$2 RETURNING *",
+    "UPDATE users SET password_hash=$1, reset_token=NULL, reset_expires=NULL, must_change_password=FALSE WHERE id=$2 RETURNING *",
+    [hash, user.id]
+  );
+  res.json({ token: signToken(updated), user: publicUser(updated) });
+});
+
+// Logged-in password change. Used both for ordinary changes and to satisfy the
+// "you must set a new password" gate after a first login on a temporary one.
+router.post("/change-password", requireAuth, async (req, res) => {
+  const { current_password, password } = req.body || {};
+  if (!current_password || !password)
+    return res.status(400).json({ error: "Your current and new passwords are required." });
+  if (String(password).length < 8)
+    return res.status(400).json({ error: "Password must be at least 8 characters." });
+
+  const user = await one("SELECT * FROM users WHERE id=$1", [req.user.id]);
+  if (!user || !(await bcrypt.compare(String(current_password), user.password_hash)))
+    return res.status(401).json({ error: "Your current password is incorrect." });
+  if (await bcrypt.compare(String(password), user.password_hash))
+    return res.status(400).json({ error: "Please choose a password different from your current one." });
+
+  const hash = await bcrypt.hash(password, 10);
+  const updated = await one(
+    "UPDATE users SET password_hash=$1, must_change_password=FALSE WHERE id=$2 RETURNING *",
     [hash, user.id]
   );
   res.json({ token: signToken(updated), user: publicUser(updated) });

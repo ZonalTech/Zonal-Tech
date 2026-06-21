@@ -16,7 +16,9 @@ export default function Login() {
     setBusy(true); setError(null);
     try {
       const user = await login(email, password);
-      const dest = loc.state?.from || (user.role === "admin" ? "/admin" : "/dashboard");
+      const dest = user.must_change_password
+        ? "/change-password"
+        : loc.state?.from || (user.role === "admin" ? "/admin" : "/dashboard");
       navigate(dest, { replace: true });
     } catch (err) {
       setError(err.message);

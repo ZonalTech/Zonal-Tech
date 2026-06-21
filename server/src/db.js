@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT NOT NULL,
   role          TEXT NOT NULL DEFAULT 'customer',
   is_active     BOOLEAN NOT NULL DEFAULT TRUE,
+  must_change_password BOOLEAN NOT NULL DEFAULT FALSE,
   reset_token   TEXT,
   reset_expires TIMESTAMPTZ,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -217,11 +218,20 @@ const DEFAULT_PAYMENT_SETTINGS = {
 };
 
 export const DEFAULT_AI_INSTRUCTIONS =
-  "You are the Zonal Tech assistant. You help visitors understand Zonal Tech's " +
-  "business software and licensing, pricing in Kenyan Shillings (KES), how to buy " +
-  "with M-Pesa, card or bank transfer, and how to activate a licence on a device " +
-  "using its Machine ID. Be concise, friendly and accurate. If you don't know " +
-  "something, say so and suggest contacting support.";
+  "You are the friendly customer-support assistant for Zonal Tech, a company that " +
+  "builds and licenses business software for African (especially Kenyan) teams: a " +
+  "point-of-sale, ERPNext, HR & payroll, time & attendance, plus web development, " +
+  "e-commerce and web hosting services.\n\n" +
+  "Answer questions clearly and concisely (2-4 sentences) in a warm, helpful tone. " +
+  "Only answer based on the information you are given about Zonal Tech and its " +
+  "services; if you don't know or it's account-specific, say so and point the " +
+  "customer to the Contact page or support@zonaltech.co.ke.\n\n" +
+  "Key facts: Payments are by M-Pesa (Safaricom STK push). Licences are signed " +
+  "tokens; device-locked products like the POS bind to a Machine ID shown on the " +
+  "app's activation screen, where the customer pastes the token to activate. " +
+  "Renewals stack on top of remaining time. Each plan includes a Service Level " +
+  "Agreement the customer accepts from their dashboard after purchase.\n\n" +
+  "Never invent prices, features, or policies you weren't given.";
 
 async function getSetting(key, fallback) {
   const row = await one("SELECT value FROM settings WHERE key=$1", [key]);
@@ -334,5 +344,7 @@ async function seed() {
 
 export async function init() {
   await q(SCHEMA);
+  // Idempotent migrations for databases created before a column was added.
+  await q("ALTER TABLE users ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN NOT NULL DEFAULT FALSE");
   await seed();
 }

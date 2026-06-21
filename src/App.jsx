@@ -18,6 +18,7 @@ import AdminServices from "./pages/AdminServices.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import ChangePassword from "./pages/ChangePassword.jsx";
 import Contact from "./pages/Contact.jsx";
 import Support from "./pages/Support.jsx";
 import Status from "./pages/Status.jsx";
@@ -29,7 +30,20 @@ function Protected({ children, admin }) {
   const loc = useLocation();
   if (!ready) return <div className="loading-page"><div className="spinner" /></div>;
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
+  // Users on an admin-issued temporary password must set their own first.
+  if (user.must_change_password) return <Navigate to="/change-password" replace state={{ from: loc.pathname }} />;
   if (admin && user.role !== "admin") return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
+// The change-password page is reachable by any logged-in user, but unlike the
+// other authenticated routes it does NOT bounce users who still owe a change —
+// that's the one place they're allowed to go.
+function RequireAuth({ children }) {
+  const { user, ready } = useAuth();
+  const loc = useLocation();
+  if (!ready) return <div className="loading-page"><div className="spinner" /></div>;
+  if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
   return children;
 }
 
@@ -69,6 +83,7 @@ export default function App() {
           <Route path="/register" element={<GuestOnly><Register /></GuestOnly>} />
           <Route path="/forgot-password" element={<GuestOnly><ForgotPassword /></GuestOnly>} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/change-password" element={<RequireAuth><ChangePassword /></RequireAuth>} />
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
           <Route path="/checkout/:planId" element={<Protected><Checkout /></Protected>} />
           <Route path="/admin" element={<Protected admin><Admin /></Protected>} />

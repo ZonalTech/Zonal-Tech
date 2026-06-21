@@ -93,10 +93,13 @@ router.post("/users", async (req, res) => {
   if (await one("SELECT 1 FROM users WHERE email=$1", [e]))
     return res.status(409).json({ error: "That email is already in use." });
   const hash = await bcrypt.hash(password, 10);
+  // Admin-created users get a temporary password, so make them set their own
+  // on first login. Admins set up their own credentials and are exempt.
+  const isAdmin = role === "admin";
   const u = await one(
-    `INSERT INTO users (name, email, company, phone, password_hash, role)
-     VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
-    [String(name).trim(), e, company || null, phone || null, hash, role === "admin" ? "admin" : "customer"]
+    `INSERT INTO users (name, email, company, phone, password_hash, role, must_change_password)
+     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+    [String(name).trim(), e, company || null, phone || null, hash, isAdmin ? "admin" : "customer", !isAdmin]
   );
   res.json({ user: publicUser(await userRow(u.id)) });
 });
@@ -130,7 +133,11 @@ router.post("/users/:id/password", async (req, res) => {
   if (!password || String(password).length < 8)
     return res.status(400).json({ error: "Password must be at least 8 characters." });
   const hash = await bcrypt.hash(password, 10);
-  const u = await one("UPDATE users SET password_hash=$1 WHERE id=$2 RETURNING id", [hash, req.params.id]);
+  // An admin-set password is temporary — force the user to change it next login.
+  const u = await one(
+    "UPDATE users SET password_hash=$1, must_change_password=TRUE WHERE id=$2 RETURNING id",
+    [hash, req.params.id]
+  );
   if (!u) return res.status(404).json({ error: "User not found." });
   res.json({ ok: true });
 });

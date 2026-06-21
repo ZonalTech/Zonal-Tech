@@ -8,9 +8,10 @@ import { getSetting, DEFAULT_AI_SETTINGS, DEFAULT_AI_INSTRUCTIONS } from "./db.j
 
 const FALLBACK =
   "Thanks for reaching out! I'm the Zonal Tech assistant. I can help with our " +
-  "software, pricing in KES, paying by M-Pesa, card or bank transfer, and " +
-  "activating a licence on a device. For anything I can't answer, email " +
-  "support@zonaltech.co.ke and our team will help.";
+  "business software — POS, ERPNext, HR & payroll, time & attendance — plus web " +
+  "development, e-commerce and hosting, paying by M-Pesa, and activating a licence " +
+  "on a device. For anything I can't answer, email support@zonaltech.co.ke and our " +
+  "team will help.";
 
 /**
  * @param {object} cfg     resolved AI settings (provider, base_url, model, api_key, instructions, enabled)

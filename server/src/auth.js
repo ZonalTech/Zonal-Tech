@@ -22,6 +22,7 @@ export function publicUser(u, opts = {}) {
     phone: u.phone || null,
     role: u.role,
     is_active: u.is_active,
+    must_change_password: !!u.must_change_password,
     created_at: u.created_at,
   };
   if (u.license_count != null) out.license_count = Number(u.license_count);

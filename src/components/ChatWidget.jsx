@@ -5,7 +5,7 @@ import Icon from "./Icon.jsx";
 
 const GREETING = {
   role: "assistant",
-  content: "Hi! I'm the Zonal Tech assistant. Ask me about pricing, M-Pesa payments, licence activation, renewals or our services.",
+  content: "Hi! I'm the Zonal Tech assistant. Ask me about our software (POS, ERPNext, HR & payroll, time & attendance), web & hosting services, M-Pesa payments, or licence activation.",
 };
 
 export default function ChatWidget() {

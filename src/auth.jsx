@@ -37,13 +37,23 @@ export function AuthProvider({ children }) {
     return user;
   }, []);
 
+  const changePassword = useCallback(async (current_password, password) => {
+    const { token, user } = await api("/auth/change-password", {
+      method: "POST",
+      body: { current_password, password },
+    });
+    setToken(token);
+    setUser(user);
+    return user;
+  }, []);
+
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
   }, []);
 
   return (
-    <AuthCtx.Provider value={{ user, ready, login, register, logout, setUser }}>
+    <AuthCtx.Provider value={{ user, ready, login, register, logout, changePassword, setUser }}>
       {children}
     </AuthCtx.Provider>
   );
