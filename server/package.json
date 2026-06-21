@@ -1,0 +1,23 @@
+{
+  "name": "zonal-tech-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend API + static host for the Zonal Tech licensing portal. Built to run as a Zonal Cloud fullstack app (Node, managed PostgreSQL via DATABASE_URL).",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.3.0",
+    "@noble/hashes": "^1.8.0",
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1"
+  }
+}
