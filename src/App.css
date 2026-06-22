@@ -24,17 +24,17 @@
 .brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: 1.12rem; letter-spacing: -.02em; }
 .brand .logo {
   width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
-  background: var(--grad); color: #07101f; font-weight: 900; font-size: .95rem;
-  box-shadow: 0 8px 20px -8px rgba(79,140,247,.8);
+  background: #f1f2f4; color: #0c0d10; font-weight: 900; font-size: .95rem;
+  box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
 }
 .brand .logo-img {
   width: 34px; height: 34px; border-radius: 9px; display: block; object-fit: contain;
   box-shadow: 0 8px 20px -8px rgba(0,0,0,.6);
 }
-/* Brand wordmark colored to match the ZT logo: blue "Zonal", green "Tech". */
+/* Neutral wordmark: bright "Zonal", muted "Tech" — no color. */
 .brand-name { font-weight: 800; letter-spacing: -.02em; }
-.brand-name .bn-z { color: #3b82f6; }
-.brand-name .bn-t { color: #7ed957; }
+.brand-name .bn-z { color: var(--text); }
+.brand-name .bn-t { color: var(--muted); }
 .nav-links { display: flex; align-items: center; gap: .35rem;
   position: absolute; left: 50%; transform: translateX(-50%); }
 .nav-links a {
@@ -72,14 +72,14 @@
 
 .hero-card {
   border-radius: var(--r-xl); border: 1px solid var(--border-2); overflow: hidden;
-  background: linear-gradient(160deg, rgba(99,102,241,.16), rgba(34,211,238,.06)), var(--surface);
+  background: linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.01)), var(--surface);
   box-shadow: var(--shadow-lg); padding: 1.4rem;
 }
 .hero-card .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .dots { display: flex; gap: .4rem; }
 .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--border-2); }
 .license-preview {
-  font-family: ui-monospace, monospace; font-size: .72rem; line-height: 1.5; color: #9fb4ff;
+  font-family: ui-monospace, monospace; font-size: .72rem; line-height: 1.5; color: #c9ccd4;
   background: #060912; border: 1px solid var(--border); border-radius: var(--r); padding: 1rem;
   white-space: pre-wrap; word-break: break-all; max-height: 190px; overflow: hidden; position: relative;
 }
@@ -97,9 +97,13 @@
 
 .feature .ico, .service-card .ico {
   width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem;
-  background: rgba(129,140,248,.12); border: 1px solid var(--border-2); margin-bottom: 1rem;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border-2); margin-bottom: 1rem;
 }
 .feature h3 { font-size: 1.1rem; }
+.step-n {
+  font-size: 1.6rem; font-weight: 800; color: var(--muted);
+  letter-spacing: .02em; margin-bottom: .6rem; opacity: .8;
+}
 
 .service-card { display: flex; flex-direction: column; transition: .18s; }
 .service-card:hover { transform: translateY(-3px); border-color: var(--border-2); }
@@ -115,7 +119,7 @@
 .plan.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-lg); }
 .plan .ribbon {
   position: absolute; top: -1px; right: 1.2rem; transform: translateY(-50%);
-  background: var(--grad); color: #07101f; font-size: .72rem; font-weight: 800; letter-spacing: .04em;
+  background: #f1f2f4; color: #0c0d10; font-size: .72rem; font-weight: 800; letter-spacing: .04em;
   padding: .25rem .7rem; border-radius: 999px;
 }
 .plan .amount { font-size: 2.1rem; font-weight: 800; margin: .4rem 0 0; }
@@ -163,7 +167,7 @@
 .license-card { display: grid; gap: .75rem; }
 .license-card .lc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 .token-box {
-  font-family: ui-monospace, monospace; font-size: .74rem; line-height: 1.5; color: #9fb4ff;
+  font-family: ui-monospace, monospace; font-size: .74rem; line-height: 1.5; color: #c9ccd4;
   background: #060912; border: 1px solid var(--border); border-radius: var(--r); padding: .9rem;
   white-space: pre-wrap; word-break: break-all; max-height: 160px; overflow: auto;
 }
@@ -183,7 +187,7 @@
   border-radius: var(--r); cursor: pointer; transition: .15s;
 }
 .device-opt:hover { border-color: var(--accent); }
-.device-opt.sel { border-color: var(--accent); background: rgba(129,140,248,.10); }
+.device-opt.sel { border-color: var(--accent); background: rgba(255,255,255,.06); }
 
 .pay-status { text-align: center; padding: 1rem 0; }
 .pay-status .big { font-size: 3rem; }
@@ -218,10 +222,46 @@
 .sla-clauses { margin: 1rem 0 0; padding-left: 1.1rem; display: grid; gap: .5rem; }
 .sla-clauses li { color: var(--muted); font-size: .9rem; line-height: 1.5; }
 
+/* ---------------- Hardware page ---------------- */
+.hw-cat-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; }
+.hw-cat-head .ico {
+  width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border-2);
+}
+.hw-cat-head h3 { font-size: 1.25rem; margin: 0 0 .15rem; }
+.hw-card { display: flex; flex-direction: column; gap: .5rem; transition: .18s; }
+.hw-card:hover { transform: translateY(-3px); border-color: var(--border-2); }
+.hw-card h4 { margin: 0; font-size: 1.05rem; }
+.hw-spec { margin: 0; font-size: .88rem; color: var(--muted); }
+.hw-card .badge { align-self: flex-start; }
+.hw-foot { margin-top: auto; padding-top: 1rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.hw-foot .price { font-weight: 700; }
+.hw-foot .price span { color: var(--muted); font-weight: 400; font-size: .85rem; }
+
+/* ---------------- Zonal Cloud highlight band ---------------- */
+.cloud-band {
+  display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center; padding: clamp(1.8rem, 4vw, 3rem);
+  border-radius: var(--r-xl); border: 1px solid var(--border-2);
+  background: linear-gradient(140deg, rgba(255,255,255,.04), rgba(255,255,255,.01)), var(--surface);
+  box-shadow: var(--shadow);
+}
+.cloud-band h2 { margin-top: .2rem; }
+.cloud-band-list { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: .6rem; }
+.cloud-band-list li { display: flex; align-items: center; gap: .6rem; color: var(--text); font-size: .95rem; }
+.cloud-band-list li .icon { color: var(--ok); flex-shrink: 0; }
+.cloud-band-card {
+  border-radius: var(--r-lg); border: 1px solid var(--border-2); padding: 1.2rem;
+  background: var(--bg-2); box-shadow: var(--shadow);
+}
+.cloud-band-card .license-preview { max-height: none; }
+.cloud-band-card .license-preview::after { display: none; }
+@media (max-width: 880px) { .cloud-band { grid-template-columns: 1fr; } }
+
 /* ---------------- CTA band + footer ---------------- */
 .cta-band {
   border-radius: var(--r-xl); padding: clamp(2.2rem, 5vw, 3.5rem); text-align: center;
-  background: linear-gradient(120deg, rgba(99,102,241,.20), rgba(34,211,238,.12)), var(--surface);
+  background: linear-gradient(120deg, rgba(255,255,255,.06), rgba(255,255,255,.02)), var(--surface);
   border: 1px solid var(--border-2);
 }
 .footer { border-top: 1px solid var(--border); margin-top: 3rem; padding: 2.5rem 0; }
@@ -246,8 +286,8 @@
 .chat-fab {
   position: fixed; right: 22px; bottom: 22px; z-index: 80;
   width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
-  background: var(--grad); color: #07101f; font-size: 1.5rem;
-  box-shadow: 0 14px 34px -10px rgba(79,140,247,.8); transition: transform .18s ease;
+  background: #f1f2f4; color: #0c0d10; font-size: 1.5rem;
+  box-shadow: 0 14px 34px -10px rgba(0,0,0,.6); transition: transform .18s ease;
 }
 .chat-fab:hover { transform: scale(1.07) translateY(-1px); }
 .chat-fab:active { transform: scale(.96); }
@@ -264,7 +304,7 @@
 .chat-head {
   display: flex; align-items: center; justify-content: space-between;
   padding: .85rem 1rem; border-bottom: 1px solid var(--border);
-  background: linear-gradient(120deg, rgba(99,102,241,.18), rgba(34,211,238,.10));
+  background: rgba(255,255,255,.04);
 }
 .chat-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(52,211,153,.2); }
 .chat-x { background: none; border: none; color: var(--muted); font-size: 1rem; cursor: pointer; }
@@ -276,7 +316,7 @@
   white-space: pre-wrap; word-wrap: break-word; animation: pageFade .2s ease;
 }
 .chat-msg.assistant { align-self: flex-start; background: var(--bg-2); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-.chat-msg.user { align-self: flex-end; background: var(--grad); color: #07101f; font-weight: 500; border-bottom-right-radius: 4px; }
+.chat-msg.user { align-self: flex-end; background: #f1f2f4; color: #0c0d10; font-weight: 500; border-bottom-right-radius: 4px; }
 
 /* Rendered markdown inside an assistant bubble */
 .chat-msg .md { white-space: normal; }

@@ -6,6 +6,8 @@ import Footer from "./components/Footer.jsx";
 import Home from "./pages/Home.jsx";
 import Services from "./pages/Services.jsx";
 import ServiceDetail from "./pages/ServiceDetail.jsx";
+import Cloud from "./pages/Cloud.jsx";
+import Hardware from "./pages/Hardware.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
@@ -76,6 +78,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:key" element={<ServiceDetail />} />
+          <Route path="/cloud" element={<Cloud />} />
+          <Route path="/hardware" element={<Hardware />} />
           <Route path="/support" element={<Support />} />
           <Route path="/status" element={<Status />} />
           <Route path="/contact" element={<Contact />} />

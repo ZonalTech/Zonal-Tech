@@ -4,35 +4,36 @@
    elevation and generous spacing. Tokens first, then primitives.
    =========================================================================== */
 :root {
-  --bg:        #0a0e17;
-  --bg-2:      #0e1320;
-  --surface:   #121a2b;
-  --elevated:  #1a2438;
-  --border:    rgba(255, 255, 255, 0.08);
-  --border-2:  rgba(255, 255, 255, 0.14);
+  --bg:        #0c0d10;
+  --bg-2:      #121317;
+  --surface:   #16181d;
+  --elevated:  #1d2026;
+  --border:    rgba(255, 255, 255, 0.07);
+  --border-2:  rgba(255, 255, 255, 0.13);
 
-  --text:  #eaeef7;
-  --muted: #98a4bd;
-  --faint: #69748f;
+  --text:  #f1f2f4;
+  --muted: #9ca0ab;
+  --faint: #6a6e79;
 
-  --accent:   #818cf8;
-  --accent-2: #22d3ee;
-  --grad: linear-gradient(120deg, #6366f1 0%, #4f8cf7 45%, #22d3ee 100%);
+  /* Neutral, professional accent — a single restrained slate tone, no gradients. */
+  --accent:   #c7cad2;
+  --accent-2: #c7cad2;
+  --grad: #e7e9ee;
 
-  --ok:     #34d399;
-  --warn:   #fbbf24;
-  --danger: #fb7185;
+  --ok:     #5fb389;
+  --warn:   #c9a44e;
+  --danger: #d08a90;
 
   --r-sm: 8px;
-  --r:    12px;
-  --r-lg: 18px;
-  --r-xl: 26px;
+  --r:    10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
 
-  --shadow:    0 10px 30px -12px rgba(0,0,0,.6);
-  --shadow-lg: 0 30px 80px -30px rgba(8,12,30,.85);
-  --ring: 0 0 0 3px rgba(129,140,248,.28);
+  --shadow:    0 10px 30px -16px rgba(0,0,0,.7);
+  --shadow-lg: 0 30px 80px -36px rgba(0,0,0,.85);
+  --ring: 0 0 0 3px rgba(199,202,210,.18);
 
-  --maxw: 1140px;
+  --maxw: 1320px;
   --nav-h: 68px;
 
   color-scheme: dark;
@@ -64,8 +65,8 @@ body::before {
   content: "";
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(60rem 40rem at 75% -10%, rgba(99,102,241,.18), transparent 60%),
-    radial-gradient(50rem 40rem at 5% 0%, rgba(34,211,238,.10), transparent 55%);
+    radial-gradient(60rem 40rem at 75% -10%, rgba(255,255,255,.04), transparent 60%),
+    radial-gradient(50rem 40rem at 5% 0%, rgba(255,255,255,.02), transparent 55%);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -77,17 +78,17 @@ small { color: var(--muted); }
 code, .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace; }
 .icon { display: inline-block; vertical-align: -.18em; flex-shrink: 0; }
 
-.container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem; }
+.container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3rem); }
+/* Full-bleed wrapper: content that should span the entire viewport width. */
+.container-wide { width: 100%; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3rem); }
 .section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; }
 .muted { color: var(--muted); }
 .center { text-align: center; }
-.gradient-text {
-  background: var(--grad); -webkit-background-clip: text; background-clip: text;
-  color: transparent;
-}
+/* Formerly a gradient; now a clean bright tone for emphasis (no color). */
+.gradient-text { color: #ffffff; }
 .eyebrow {
-  display: inline-block; font-size: .8rem; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--accent-2); margin-bottom: 1rem;
+  display: inline-block; font-size: .78rem; font-weight: 600; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 1rem;
 }
 
 /* --- buttons --- */
@@ -97,14 +98,14 @@ code, .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, mono
   padding: .68rem 1.15rem; border-radius: var(--r); border: 1px solid var(--border-2);
   background: var(--surface); color: var(--text); transition: .16s ease;
 }
-.btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+.btn:hover { transform: translateY(-1px); border-color: var(--border-2); background: var(--elevated); }
 .btn:active { transform: translateY(0); }
 .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 .btn-primary {
-  background: var(--grad); border: none; color: #07101f;
-  box-shadow: 0 12px 30px -12px rgba(79,140,247,.7);
+  background: #f1f2f4; border: 1px solid #f1f2f4; color: #0c0d10;
+  box-shadow: 0 12px 30px -16px rgba(0,0,0,.6);
 }
-.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:hover { background: #ffffff; border-color: #ffffff; }
 .btn-ghost { background: transparent; border-color: var(--border); color: var(--muted); }
 .btn-ghost:hover { color: var(--text); }
 .btn-danger { background: transparent; border-color: rgba(251,113,133,.5); color: var(--danger); }
@@ -144,7 +145,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .badge-ok    { color: var(--ok);     border-color: rgba(52,211,153,.4);  background: rgba(52,211,153,.10); }
 .badge-warn  { color: var(--warn);   border-color: rgba(251,191,36,.4);  background: rgba(251,191,36,.10); }
 .badge-danger{ color: var(--danger); border-color: rgba(251,113,133,.4); background: rgba(251,113,133,.10); }
-.badge-accent{ color: var(--accent-2); border-color: rgba(34,211,238,.4); background: rgba(34,211,238,.10); }
+.badge-accent{ color: var(--text); border-color: var(--border-2); background: rgba(255,255,255,.06); }
 
 /* --- layout helpers --- */
 .grid { display: grid; gap: 1.25rem; }
@@ -158,7 +159,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .alert { padding: .8rem 1rem; border-radius: var(--r); border: 1px solid var(--border-2); margin-bottom: 1rem; font-size: .92rem; }
 .alert-error { color: #fecdd3; background: rgba(251,113,133,.12); border-color: rgba(251,113,133,.4); }
 .alert-ok    { color: #bbf7d0; background: rgba(52,211,153,.10); border-color: rgba(52,211,153,.4); }
-.alert-info  { color: #cbd5ff; background: rgba(99,102,241,.12); border-color: rgba(99,102,241,.4); }
+.alert-info  { color: #dfe2e8; background: rgba(255,255,255,.06); border-color: var(--border-2); }
 
 /* --- tables --- */
 .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-lg); }

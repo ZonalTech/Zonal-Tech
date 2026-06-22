@@ -249,8 +249,27 @@ export { getSetting, putSetting, DEFAULT_AI_SETTINGS, DEFAULT_PAYMENT_SETTINGS }
 
 const SEED_SERVICES = [
   {
+    key: "hosting",
+    name: "Hosting",
+    tagline: "Managed cloud hosting with backups, monitoring and support.",
+    description:
+      "Reliable, managed hosting for your websites and Zonal Tech apps. We handle the " +
+      "servers, backups, monitoring and HTTPS so you don't have to. Powered by Zonal " +
+      "Cloud — deploy from Git and go live with a URL in seconds.",
+    requires_device: false,
+    download_url: "",
+    plans: [
+      { name: "Starter", edition: "starter", price_kes: 2500, period: "month", duration_days: 30,
+        features: ["1 app or site", "Daily backups", "Automatic HTTPS", "Email support"] },
+      { name: "Business", edition: "business", price_kes: 6000, period: "month", duration_days: 30,
+        features: ["Up to 5 apps", "Managed PostgreSQL", "Monitoring & alerts", "Priority support"] },
+      { name: "Scale", edition: "scale", price_kes: 15000, period: "month", duration_days: 30,
+        features: ["Unlimited apps", "Dedicated resources", "99.9% uptime SLA", "Phone & email support"] },
+    ],
+  },
+  {
     key: "zt-pos",
-    name: "Zonal Tech POS",
+    name: "Point of Sale (POS)",
     tagline: "Fast, offline-first point of sale for shops and restaurants.",
     description:
       "A complete point-of-sale built for African retail: works offline, syncs when " +
@@ -268,33 +287,71 @@ const SEED_SERVICES = [
     ],
   },
   {
-    key: "zt-inventory",
-    name: "Zonal Tech Inventory",
-    tagline: "Multi-store stock control with low-stock alerts and reports.",
+    key: "erpnext",
+    name: "ERPNext",
+    tagline: "Complete open-source ERP — accounting, sales, stock and more.",
     description:
-      "Keep every store's stock accurate. Transfers, purchase orders, supplier records, " +
-      "barcode support and the reports you need to reorder on time.",
-    requires_device: true,
-    download_url: "",
-    plans: [
-      { name: "Standard", edition: "standard", price_kes: 18000, period: "year", duration_days: 365,
-        features: ["1 store", "Stock & transfers", "Low-stock alerts", "Email support"] },
-      { name: "Enterprise", edition: "enterprise", price_kes: 48000, period: "year", duration_days: 365,
-        features: ["Unlimited stores", "Purchase orders", "Advanced reports", "Priority support"] },
-    ],
-  },
-  {
-    key: "zt-cloud-care",
-    name: "Cloud Care",
-    tagline: "Managed hosting, backups and support for your Zonal Tech apps.",
-    description:
-      "A subscription service where our team hosts, monitors, backs up and supports your " +
-      "Zonal Tech deployment. No device activation required — we set everything up for you.",
+      "Run your whole business on ERPNext: accounting, sales, purchasing, inventory, " +
+      "manufacturing and projects in one system. We deploy, configure, customise and " +
+      "support it for you on managed infrastructure.",
     requires_device: false,
     download_url: "",
     plans: [
-      { name: "Care", edition: "standard", price_kes: 5000, period: "month", duration_days: 30,
-        features: ["Managed hosting", "Daily backups", "Monitoring", "Email & phone support"] },
+      { name: "Standard", edition: "standard", price_kes: 18000, period: "month", duration_days: 30,
+        features: ["Up to 10 users", "Hosting & backups", "Email support", "Quarterly updates"] },
+      { name: "Enterprise", edition: "enterprise", price_kes: 45000, period: "month", duration_days: 30,
+        features: ["Unlimited users", "Custom modules", "Dedicated support", "Onboarding & training"] },
+    ],
+  },
+  {
+    key: "zt-time",
+    name: "Time & Attendance",
+    tagline: "Biometric clock-in/out with shifts, overtime and reports.",
+    description:
+      "Track attendance accurately with biometric or PIN clock-in, shift scheduling, " +
+      "overtime rules and exportable timesheets. Integrates with our HR and payroll, " +
+      "and pairs with Zonal Tech biometric hardware.",
+    requires_device: true,
+    download_url: "",
+    plans: [
+      { name: "Standard", edition: "standard", price_kes: 8000, period: "year", duration_days: 365,
+        features: ["Up to 50 staff", "Biometric & PIN", "Shift scheduling", "Timesheet exports"] },
+      { name: "Enterprise", edition: "enterprise", price_kes: 20000, period: "year", duration_days: 365,
+        features: ["Unlimited staff", "Multiple sites", "Overtime & leave rules", "Priority support"] },
+    ],
+  },
+  {
+    key: "zt-hr",
+    name: "Human Resources (HR)",
+    tagline: "Employee records, payroll, leave and performance in one place.",
+    description:
+      "A full HR suite: employee records, payroll with statutory deductions, leave " +
+      "management, contracts and performance reviews. Built for Kenyan compliance and " +
+      "integrates with Time & Attendance.",
+    requires_device: false,
+    download_url: "",
+    plans: [
+      { name: "Standard", edition: "standard", price_kes: 12000, period: "year", duration_days: 365,
+        features: ["Up to 50 employees", "Payroll & payslips", "Leave management", "Email support"] },
+      { name: "Enterprise", edition: "enterprise", price_kes: 30000, period: "year", duration_days: 365,
+        features: ["Unlimited employees", "Performance reviews", "Custom workflows", "Priority support"] },
+    ],
+  },
+  {
+    key: "vehicle-tracking",
+    name: "Vehicle Tracking",
+    tagline: "Real-time GPS fleet tracking with alerts and trip history.",
+    description:
+      "Track your fleet in real time: live location, trip history, geofencing, speed " +
+      "and fuel alerts, and driver reports. Works with Zonal Tech GPS tracker hardware " +
+      "and bills per vehicle.",
+    requires_device: true,
+    download_url: "",
+    plans: [
+      { name: "Per Vehicle", edition: "standard", price_kes: 800, period: "month", duration_days: 30,
+        features: ["1 vehicle", "Live GPS tracking", "Trip history", "Speed & fuel alerts"] },
+      { name: "Fleet", edition: "fleet", price_kes: 12000, period: "month", duration_days: 30,
+        features: ["Up to 20 vehicles", "Geofencing", "Driver reports", "Priority support"] },
     ],
   },
 ];

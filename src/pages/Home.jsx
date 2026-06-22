@@ -34,9 +34,10 @@ export default function Home() {
             <span className="eyebrow">Software & licensing platform</span>
             <h1>Run your business on <span className="gradient-text">software that pays its own way.</span></h1>
             <p className="lead">
-              Zonal Tech builds and licenses business software for African teams —
-              starting with a powerful offline point-of-sale. Buy with M-Pesa, get a
-              signed licence in seconds, manage every device from one place.
+              Zonal Tech builds, licenses and hosts business software for African teams —
+              from a powerful offline point-of-sale to Zonal Cloud, our self-hosted
+              deployment platform. Buy with M-Pesa, get a signed licence in seconds, and
+              ship apps with a single push.
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn btn-primary btn-lg">Create free account</Link>
@@ -88,6 +89,46 @@ H_Q2lMlxdCgysXYXiU6A2-GFM9Xy3Rpq5KEDljPp
                 <p>{f.d}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Zonal Cloud highlight ---------- */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <div className="cloud-band">
+            <div>
+              <span className="eyebrow">Introducing Zonal Cloud</span>
+              <h2>Deploy any app on your own server.</h2>
+              <p>
+                Zonal Cloud is our self-hosted Platform-as-a-Service. Push to deploy static
+                sites, Node.js backends, full-stack apps and Node-RED flows — each in its own
+                Docker container, with a managed PostgreSQL database, a dedicated URL and
+                automatic HTTPS. The same platform runs on a laptop or a VPS.
+              </p>
+              <ul className="cloud-band-list">
+                <li><Icon name="check" size={18} /> Push-to-deploy from GitHub or any Git repo</li>
+                <li><Icon name="check" size={18} /> Managed PostgreSQL for full-stack apps</li>
+                <li><Icon name="check" size={18} /> A URL and automatic HTTPS for every app</li>
+                <li><Icon name="check" size={18} /> Multi-tenant — many teams, one server</li>
+              </ul>
+              <div className="hero-cta" style={{ marginTop: "1.4rem" }}>
+                <Link to="/cloud" className="btn btn-primary">Explore Zonal Cloud</Link>
+              </div>
+            </div>
+            <div className="cloud-band-card">
+              <div className="row-head">
+                <span className="badge badge-ok">● Deploy succeeded</span>
+                <div className="dots"><i/><i/><i/></div>
+              </div>
+              <div className="license-preview">{`$ git push zonal main
+→ Building "storefront" (fullstack)
+  ✓ Image built
+  ✓ Postgres provisioned
+  ✓ Route + HTTPS issued
+
+  Live at https://storefront.zonal.app`}</div>
+            </div>
           </div>
         </div>
       </section>

@@ -32,12 +32,18 @@ const P = {
   dashboard: <><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></>,
   inbox: <><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></>,
   bell: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></>,
+  truck: <><path d="M1 3h15v13H1z" /><path d="M16 8h4l3 3v5h-7" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></>,
+  pin: <><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></>,
+  fingerprint: <><path d="M12 10a2 2 0 0 0-2 2c0 1.5.5 3 .5 4.5" /><path d="M14.5 12a2.5 2.5 0 0 0-5 0c0 2 .5 3.5.5 5" /><path d="M8.5 9.5a5 5 0 0 1 7 0" /><path d="M6.5 7.5a8 8 0 0 1 11 0" /><path d="M16 13c0 3 .5 5 .5 5" /></>,
+  printer: <><path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></>,
+  cpu2: <><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" /></>,
 };
 
 // Map a service key to a fitting icon.
 const SERVICE_ICONS = {
-  "zt-pos": "cart", erpnext: "building", "zt-hr": "users",
-  "zt-time": "clock", "web-dev": "code", ecommerce: "bag", hosting: "server",
+  hosting: "server", "zt-pos": "cart", erpnext: "building", "zt-hr": "users",
+  "zt-time": "clock", "vehicle-tracking": "truck",
+  "web-dev": "code", ecommerce: "bag",
 };
 export const serviceIcon = (key) => SERVICE_ICONS[key] || "tag";
 

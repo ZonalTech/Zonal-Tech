@@ -5,7 +5,7 @@ import Icon, { serviceIcon } from "../components/Icon.jsx";
 const META = {
   operational: { label: "Operational", cls: "badge-ok", dot: "#34d399" },
   degraded: { label: "Degraded", cls: "badge-warn", dot: "#fbbf24" },
-  maintenance: { label: "Maintenance", cls: "badge-accent", dot: "#22d3ee" },
+  maintenance: { label: "Maintenance", cls: "badge-accent", dot: "#c7cad2" },
   outage: { label: "Outage", cls: "badge-danger", dot: "#fb7185" },
 };
 
