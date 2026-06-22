@@ -22,7 +22,8 @@ export async function issueLicense({
   serviceKey,
   serviceName,
   edition,
-  machineId,
+  uid,               // account/user identifier the licence binds to
+  machineId,         // legacy alias for uid (kept for older callers)
   durationDays,      // 0 / null => perpetual
   requiresDevice = true,
   orderId = null,
@@ -31,11 +32,15 @@ export async function issueLicense({
   const expires = durationDays && Number(durationDays) > 0 ? addDaysISO(durationDays) : null;
   const customer = user.company || user.name;
 
+  // POS services now activate against the account UID rather than a device
+  // Machine ID. Fall back to a stable per-account UID when none is supplied.
+  const activationUid = uid || machineId || `UID-${user.id}`;
+
   const { token } = buildLicense(
     {
       app: serviceKey,
       customer,
-      machineId: machineId || `ACCOUNT-${user.id}`,
+      uid: activationUid,
       edition,
       issued,
       expires: expires || "",
@@ -43,20 +48,22 @@ export async function issueLicense({
     `${serviceKey.toUpperCase()} LICENSE`
   );
 
+  // NOTE: the `machine_id` DB columns are retained to avoid a destructive
+  // migration on live data; they now hold the activation UID.
   const license = await one(
     `INSERT INTO licenses
        (user_id, order_id, service_key, service_name, customer, edition, machine_id,
         token, issued, expires, requires_device)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
     [user.id, orderId, serviceKey, serviceName, customer, edition,
-     machineId || null, token, issued, expires, requiresDevice]
+     activationUid, token, issued, expires, requiresDevice]
   );
 
   const agreement = await one(
     `INSERT INTO agreements
        (user_id, license_id, order_id, service_name, machine_id, terms, status)
      VALUES ($1,$2,$3,$4,$5,$6,'pending') RETURNING *`,
-    [user.id, license.id, orderId, serviceName, machineId || null,
+    [user.id, license.id, orderId, serviceName, activationUid,
      JSON.stringify(slaTerms(edition))]
   );
 

@@ -72,20 +72,24 @@ export function publicKeyB64(seedB64) {
  * Build a signed license token.
  *
  * @param {string} seedB64  vendor private seed (base64, 32 bytes)
- * @param {object} fields   { app, customer, machineId, edition, issued, expires }
+ * @param {object} fields   { app, customer, uid, edition, issued, expires }
+ *                          `uid` is the account/user identifier the licence is
+ *                          bound to (replaces the old per-device machine_id).
  *                          `expires` may be "" for a perpetual license.
  * @param {string} wrapper  label used in the BEGIN/END lines (cosmetic)
  * @returns {{ token: string, payload: object, payloadB64: string }}
  */
 export function buildLicense(seedB64, fields, wrapper = "ZT LICENSE") {
-  const { app, customer, machineId, edition, issued, expires } = fields;
+  // Accept `uid` (current) or `machineId` (legacy callers) interchangeably.
+  const { app, customer, edition, issued, expires } = fields;
+  const uid = fields.uid ?? fields.machineId;
 
-  if (!machineId || !machineId.trim()) throw new Error("Machine ID is required.");
+  if (!uid || !String(uid).trim()) throw new Error("UID is required.");
   if (!customer || !customer.trim()) throw new Error("Customer is required.");
 
-  // Field order matches the POS example; order is irrelevant to verification
+  // Field order matches the POS verifier; order is irrelevant to verification
   // (the verifier re-parses the JSON) but keeps tokens tidy and diffable.
-  const payload = { v: 1, machine_id: machineId.trim() };
+  const payload = { v: 1, uid: String(uid).trim() };
   if (app && app.trim()) payload.app = app.trim();
   payload.customer = customer.trim();
   payload.edition = (edition || "standard").trim();

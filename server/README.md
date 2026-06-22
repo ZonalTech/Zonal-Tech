@@ -74,6 +74,26 @@ box. **Before selling**, set `LICENSE_SEED_B64` to a fresh secret seed and paste
 the matching public key (shown on the admin dashboard) into each product's
 `LICENSE_PUBLIC_KEY`.
 
+### Activation by UID (replaces device Machine ID)
+
+POS and other licensed products now activate against an account **UID** rather
+than a per-device Machine ID. The signed token payload carries `uid`:
+
+```json
+{ "v": 1, "uid": "UID-1024", "app": "zt-pos", "customer": "...",
+  "edition": "standard", "issued": "2026-06-22", "expires": "2027-06-22" }
+```
+
+**Product verifier change** (`apps/zt-pos/license.py` shipped inside the app):
+read `payload["uid"]` where it previously read `payload["machine_id"]`, and
+compare it to the account UID the app is bound to instead of the local machine
+fingerprint. The signature, key handling and token format are unchanged, so
+existing public keys keep working — only the bound field changes.
+
+> The portal's `licenses`/`agreements` tables keep their `machine_id` columns
+> (to avoid a destructive migration on live data); they now store the UID value.
+> `buildLicense` accepts either `uid` (current) or `machineId` (legacy alias).
+
 ## Payments
 
 Three methods, toggled in **Admin → Settings → Payments**:

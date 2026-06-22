@@ -43,7 +43,7 @@ export default function Generator() {
   const isDemo = seed === DEMO_SEED_B64;
 
   const [customer, setCustomer] = useState("");
-  const [machineId, setMachineId] = useState("");
+  const [uid, setUid] = useState("");
   const [app, setApp] = useState("zt-pos");
   const [wrapper, setWrapper] = useState("ZT-POS LICENSE");
   const [edition, setEdition] = useState("standard");
@@ -56,12 +56,12 @@ export default function Generator() {
 
   const reset = () => { setGenerated(null); setGenError(null); };
   const bind = (setter) => (e) => { setter(e.target.value); reset(); };
-  const canGenerate = customer.trim() && machineId.trim() && !keyInfo.error;
+  const canGenerate = customer.trim() && uid.trim() && !keyInfo.error;
 
   function generate() {
     try {
       const r = buildLicense(seed,
-        { app, customer, machineId, edition, issued, expires: perpetual ? "" : expires },
+        { app, customer, uid, edition, issued, expires: perpetual ? "" : expires },
         wrapper);
       setGenerated({ ...r, verified: selfVerify(seed, r.token) });
       setGenError(null);
@@ -120,9 +120,9 @@ export default function Generator() {
               <input value={customer} onChange={bind(setCustomer)} placeholder="Zonal Tech Ltd" autoFocus />
             </label>
             <label className="field">
-              <span>Device / Machine ID *</span>
-              <input className="mono" value={machineId} onChange={bind(setMachineId)} placeholder="6DD4-DF54-3804-ADC6" />
-              <small className="hint">Copied from the app's activation screen.</small>
+              <span>UID *</span>
+              <input className="mono" value={uid} onChange={bind(setUid)} placeholder="UID-1024 or account/user id" />
+              <small className="hint">The account UID the POS activates against (replaces the old device Machine ID).</small>
             </label>
 
             <button className="btn btn-primary btn-block" onClick={generate} disabled={!canGenerate}>

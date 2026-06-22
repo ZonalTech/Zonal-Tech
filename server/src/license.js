@@ -61,17 +61,21 @@ export const usingDemoSeed = () => SEED_B64 === DEMO_SEED_B64;
 /**
  * Build a signed license token.
  *
- * @param {object} fields  { app, customer, machineId, edition, issued, expires }
+ * @param {object} fields  { app, customer, uid, edition, issued, expires }
+ *                         `uid` is the account/user identifier the licence is
+ *                         bound to (replaces the old per-device machine_id).
  *                         `expires` may be "" / null for a perpetual licence.
  * @param {string} wrapper label used in the BEGIN/END lines (cosmetic)
  * @returns {{ token: string, payload: object, payloadB64: string }}
  */
 export function buildLicense(fields, wrapper = "ZT LICENSE") {
-  const { app, customer, machineId, edition, issued, expires } = fields;
-  if (!machineId || !String(machineId).trim()) throw new Error("Machine ID is required.");
+  // Accept `uid` (current) or `machineId` (legacy callers) interchangeably.
+  const { app, customer, edition, issued, expires } = fields;
+  const uid = fields.uid ?? fields.machineId;
+  if (!uid || !String(uid).trim()) throw new Error("UID is required.");
   if (!customer || !String(customer).trim()) throw new Error("Customer is required.");
 
-  const payload = { v: 1, machine_id: String(machineId).trim() };
+  const payload = { v: 1, uid: String(uid).trim() };
   if (app && String(app).trim()) payload.app = String(app).trim();
   payload.customer = String(customer).trim();
   payload.edition = String(edition || "standard").trim();

@@ -39,6 +39,7 @@ export default function Nav() {
               <NavLink to="/services" onClick={close}>Services</NavLink>
               <NavLink to="/hardware" onClick={close}>Hardware</NavLink>
               <NavLink to="/cloud" onClick={close}>Cloud</NavLink>
+              <NavLink to="/studio" onClick={close}>Studio</NavLink>
               <a href="/#pricing" onClick={close}>Pricing</a>
               <NavLink to="/support" onClick={close}>Support</NavLink>
               <NavLink to="/status" onClick={close}>Status</NavLink>

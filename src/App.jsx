@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Admin from "./pages/Admin.jsx";
 import Generator from "./pages/Generator.jsx";
+import GraphicsStudio from "./pages/GraphicsStudio.jsx";
 import AdminSettings from "./pages/AdminSettings.jsx";
 import AdminPayments from "./pages/AdminPayments.jsx";
 import AdminServices from "./pages/AdminServices.jsx";
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="/services/:key" element={<ServiceDetail />} />
           <Route path="/cloud" element={<Cloud />} />
           <Route path="/hardware" element={<Hardware />} />
+          <Route path="/studio" element={<GraphicsStudio />} />
           <Route path="/support" element={<Support />} />
           <Route path="/status" element={<Status />} />
           <Route path="/contact" element={<Contact />} />

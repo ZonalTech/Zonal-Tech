@@ -6,6 +6,7 @@ import { Router } from "express";
 import { one, many, q, getSetting, DEFAULT_PAYMENT_SETTINGS } from "../db.js";
 import { toService } from "../serialize.js";
 import { chat, aiSettings } from "../assistant.js";
+import { designLogo } from "../generate.js";
 
 const router = Router();
 
@@ -67,6 +68,21 @@ router.post("/assistant", async (req, res) => {
   const cfg = await aiSettings();
   const result = await chat(cfg, String(message), Array.isArray(history) ? history : []);
   res.json({ reply: result.reply });
+});
+
+// AI-orchestrated logo design. Returns a structured design spec; the client
+// renders it to SVG and rasterizes to PNG/JPEG. `n` (1–4) returns variations.
+router.post("/generate/design", async (req, res) => {
+  const brief = String(req.body?.brief || "").trim();
+  if (!brief) return res.status(400).json({ error: "A brand name or brief is required." });
+  const n = Math.min(4, Math.max(1, Number(req.body?.n) || 1));
+  const results = await Promise.all(
+    Array.from({ length: n }, () => designLogo(brief))
+  );
+  res.json({
+    designs: results.map((r) => r.design),
+    note: results.find((r) => r.note)?.note || undefined,
+  });
 });
 
 router.get("/payment-methods", async (_req, res) => {
